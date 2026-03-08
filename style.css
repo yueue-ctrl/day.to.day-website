@@ -1,0 +1,1221 @@
+@font-face {
+    font-family: 'FangZheng';
+    src: url('fonts/FZYanSJW.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('fonts/Inter-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+/*网格*/
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --line-color: #000000;
+    --grid-gap: 20px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif; /* Default to Inter */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.split {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    overflow-y: auto;
+    padding-top: 150px; /* Add padding top to avoid content being hidden behind fixed header */
+}
+
+/* Center Panel Styles */
+.center-panel {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px; /* Initial width matching the old line */
+    height: calc(100% - 60px);
+    margin-top: 55px;
+    top: 0;
+    z-index: 15;
+    transition: all 0.5s ease; /* Animate expansion and position */
+}
+
+.line-left, .line-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px; /* Half of 2px */
+    background-color: var(--line-color);
+    transition: left 0.5s ease, right 0.5s ease; /* Animate split */
+}
+
+.line-left {
+    left: 0;
+}
+
+.line-right {
+    right: 0;
+}
+
+.panel-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px;
+    opacity: 0; /* Hidden initially */
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* Don't block clicks when hidden */
+}
+
+.panel-content div {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem; /* Reduced from 1.5rem */
+    margin-bottom: 0.5rem; /* Reduced line spacing */
+    font-weight: 300;
+    width: 100%; /* Take full width */
+    text-align: left; /* Align left */
+    padding-left: 0; /* Remove padding to stick to the left line */
+    margin-left: 2px; /* Small offset from the line itself */
+    letter-spacing: -0.5px; /* Adjusted letter spacing */
+}
+
+.panel-content .zh {
+    font-family: 'FangZheng', serif; /* Use Chinese font for Chinese text */
+    font-weight: normal;
+    margin-right: 0; /* Remove space between Chinese and English */
+}
+
+/* Expanded State */
+.center-panel.expanded {
+    width: 79px; /* Reduced width to not cover headers too much */
+}
+
+.center-panel.expanded .panel-content {
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0.2s; /* Show content after expansion starts */
+}
+
+/* Make sure headers stay on top or move if needed */
+/* We will use Javascript to push the side contents or adjust layout */
+
+/* Container needs to handle the layout change */
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: all 0.5s ease;
+}
+
+.split {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    overflow-y: auto;
+    padding-top: 150px; 
+    transition: all 0.5s ease;
+}
+
+/* When expanded, push content and move scrollbar */
+body.panel-open .split.left {
+    margin-right: 50px; /* Create gap for center panel, moving scrollbar left */
+    padding-right: 10px; /* Reduce internal padding */
+}
+
+body.panel-open .split.right {
+    margin-left: 50px; /* Create gap for center panel, moving scrollbar right */
+    padding-left: 80px; /* Reduce internal padding */
+}
+
+/* Adjust headers when panel is open - DO NOT move headers */
+body.panel-open .left header {
+    padding-right: 40px; /* Keep original padding (default is 40px in container) */
+}
+
+body.panel-open .right header {
+    padding-left: 40px; /* Keep original padding */
+}
+
+/* Focus Mode Styles */
+body.left-focus .split.right {
+    flex: 0;
+    padding: 0;
+    /* opacity: 0;  REMOVED to keep header visible if needed */
+    overflow: visible; /* Allow content to be seen */
+    min-width: 0; /* Allow shrinking below content size */
+    transition: all 0.5s ease;
+}
+
+body.left-focus .split.right .grid-content {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+body.left-focus .split.right h1 {
+    opacity: 0; /* Hide "在忙" */
+    transition: opacity 0.5s;
+}
+
+body.left-focus .split.left {
+    flex: 1;
+    /* Calculate padding to end at the new line position 
+       Line is at calc(100% - 120px) - margin-left(-2px)
+       So effectively at right: 122px approx.
+       We want content to stop there.
+       Original padding is 40px.
+       We need padding-right to be 120px + some gap (e.g. 40px) = 160px
+    */
+    padding-right: 80px; 
+    transition: all 0.5s ease;
+}
+
+/* Move center panel to the right edge in focus mode */
+body.left-focus .center-panel {
+    left: calc(100% - 38px); /* Move left from edge */
+    transform: translateX(-100%);
+    margin-left: -2px; /* Adjust for width */
+    top: 0; /* Ensure top position is maintained */
+}
+
+/* Move windmill to the right edge in focus mode */
+body.left-focus .windmill-container {
+    left: calc(100% - 40px); /* Move left from edge */
+    transform: translateX(-50%) rotate(90deg); /* Center horizontally on the line */
+    top: 25px; /* Keep original top position */
+    margin-left: -1px; /* Align center with the 2px line (move left by 1px) */
+}
+
+/* Ensure headers stay fixed */
+.left header, .right header {
+    transition: all 0.5s ease; /* Smooth transition */
+}
+
+/* Header Layout */
+.left header {
+    display: flex;
+    justify-content: flex-end; /* Align to right initially */
+    align-items: flex-start;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align text to right for left header */
+    position: relative;
+    z-index: 30;
+}
+
+/* Specific styling for right header content */
+.right-header-content {
+    align-items: flex-start; /* Align text to left for right header */
+}
+
+.play-options, .pay-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Options align left */
+    position: absolute;
+    top: 0;
+    width: max-content;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+
+.play-options {
+    left: 100%; /* Start from right of "在玩" */
+    transform: translateX(-20px);
+    padding-left: 10px;
+}
+
+.pay-options {
+    right: 100%; /* Start from left of "在忙" */
+    transform: translateX(20px);
+    padding-right: 10px;
+    align-items: flex-end; /* Align items to right end relative to "在忙" */
+}
+
+/* Pay options styling - similar to play options */
+.play-options .option.title, .pay-options .option.title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem; 
+    font-weight: 300;
+    color: #000;
+    margin-bottom: 15px;
+    margin-top: 4px;
+}
+
+.play-options .option-item, .pay-options .option-item {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.play-options .option-item:hover, .pay-options .option-item:hover {
+    opacity: 0.7;
+}
+
+.play-options .option-item .zh, .pay-options .option-item .zh {
+    font-family: 'FangZheng', serif;
+    font-weight: normal;
+}
+
+.play-options .option-item .en, .pay-options .option-item .en {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+}
+
+/* Submenu Styles Redesign */
+.option-item {
+    position: relative; 
+    height: 1.5rem; /* Fixed height to match text line height */
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* Hide original label on hover */
+.option-item:hover .main-label {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.main-label {
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    display: flex;
+    gap: 10px;
+}
+
+/* Expanded Horizontal Menu */
+.expanded-menu {
+    position: absolute;
+    top: 0;
+    /* Center on the parent item */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center; /* Vertically align items */
+    gap: 15px; /* Spacing between words */
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    /* background-color: var(--bg-color); REMOVED to show original title */
+    z-index: 10;
+}
+
+/* Animation for items */
+.expanded-menu .sub-item {
+    opacity: 0;
+    transform: translateX(0);
+    transition: all 0.4s ease;
+}
+
+/* Hover state triggers animation */
+.option-item:hover .expanded-menu {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.option-item:hover .expanded-menu .sub-item {
+    opacity: 1;
+}
+
+/* Specific animations for Play (Right side) - Type */
+/* Left items (ZH) move left, Right items (EN) move right */
+#play-type .zh.sub-item {
+    transform: translateX(20px); /* Start slightly inward */
+}
+#play-type:hover .zh.sub-item {
+    transform: translateX(10px); /* Move out but keep slightly right (closer to title) */
+}
+
+#play-type .en.sub-item {
+    transform: translateX(-20px); /* Start slightly inward */
+}
+#play-type:hover .en.sub-item {
+    transform: translateX(0);
+}
+
+/* Specific animations for Play (Right side) - Year */
+/* Years move right */
+#play-year .sub-item {
+    transform: translateX(-20px);
+}
+#play-year:hover .sub-item {
+    transform: translateX(0);
+}
+
+/* Fix positioning for Play Year menu to match Pay Year logic */
+/* Pay Year logic: [Title] [Years] -> Years extend right.
+   Play Year logic: [Title] [Years] -> Years extend right.
+   
+   The HTML for Play Year is currently:
+   [Main Label] [Expanded Menu]
+   
+   The Expanded Menu HTML is:
+   [Years 2022-2025] [Title: By Year]
+   
+   Wait, if HTML is [Years] [Title], then Years are on the LEFT of the title.
+   This contradicts "Years extend right".
+   
+   Let's check index.html again.
+   I previously edited index.html for Play Year to be:
+   <div class="expanded-menu year-menu">
+       <span class="en sub-item">2022</span>...
+       <span class="zh main-item">按年份</span>...
+   </div>
+   
+   This puts years on LEFT of title.
+   But user wants Play page (Right side) to be like Pay page (Left side) interaction?
+   
+   User says: "pay这页的按年份交互是对的，play这页不对".
+   Pay page: Years extend RIGHT from title.
+   So Play page should ALSO have Years extend RIGHT from title?
+   
+   If so, I need to flip the HTML order for Play Year.
+*/
+
+/* Specific animations for Pay (Left side) - Type */
+/* ZH (Right) moves Right, EN (Left) moves Left */
+#pay-type .zh.sub-item {
+    transform: translateX(20px); /* Start slightly outward (Right) and move Left? 
+                                    User said "animation is from left to right" implying they want change?
+                                    If they want Right to Left: Start 20px, End 0.
+                                 */
+}
+#pay-type:hover .zh.sub-item {
+    transform: translateX(0);
+}
+
+#pay-type .en.sub-item {
+    transform: translateX(-20px); /* Keep EN as is (Right to Left)? 
+                                    Wait, EN on Left should move Right to Left to expand?
+                                    No, EN on Left needs to move Right to Left (Start near title (Right) -> Out (Left)).
+                                    So EN starts at 20px (Right of final) -> 0.
+                                    This is Right to Left.
+                                 */
+}
+#pay-type:hover .en.sub-item {
+    transform: translateX(0);
+}
+
+/* Specific animations for Pay (Left side) - Year */
+/* Years move right (as per layout [Title] [Years]) */
+#pay-year .sub-item {
+    transform: translateX(-20px);
+}
+#pay-year:hover .sub-item {
+    transform: translateX(0);
+}
+
+/* Stagger delays for a "flowing out" effect */
+/* We can use nth-child, but children order varies. 
+   Simpler: Transition delay based on distance from center?
+   Hard to target generic classes.
+   Let's just use a simple slide out for now.
+*/
+
+/* Items in expanded menu */
+.expanded-menu span {
+    font-size: 1rem; /* Ensure consistent size */
+    cursor: pointer;
+    position: relative;
+    color: #000;
+}
+
+.expanded-menu .zh {
+    font-family: 'FangZheng', serif;
+    font-weight: normal;
+}
+
+.expanded-menu .en {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+}
+
+/* Underline effect */
+.expanded-menu span::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: 0px;
+    left: 0;
+    background-color: currentColor;
+    transition: width 0.3s ease;
+}
+
+.expanded-menu span:hover::after {
+    width: 100%;
+}
+
+#play-year .expanded-menu span, #pay-year .expanded-menu span {
+    font-size: 1rem; /* Smaller font for years */
+}
+
+/* Specific positioning overrides removed to allow natural centering relative to item */
+#play-type .expanded-menu, #pay-type .expanded-menu, 
+#play-year .expanded-menu, #pay-year .expanded-menu {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+}
+
+/* Revert hiding logic - Keep visible */
+.option-item:hover .main-label {
+    opacity: 1; /* Keep visible */
+    pointer-events: auto; /* Allow interaction */
+}
+
+/* Hide the duplicate title in expanded menu to avoid double text/shadow */
+.expanded-menu .main-item {
+    visibility: hidden; /* Keep space but hide text */
+    /* Or display: none if we handle positioning manually? 
+       If we hide it, the gaps might look weird.
+       visibility: hidden keeps the layout flow.
+    */
+}
+
+/* Adjust underlines */
+/* Since duplicate title is hidden, we need underline on the ORIGINAL title when any item is hovered?
+   Or just underline individual items?
+   User said "hover任何一个词都有下划线".
+   Original title is main-label. It has hover effect? No.
+   
+   If we want "按方法" to have underline when hovered, we can add it to main-label spans.
+*/
+
+.main-label span {
+    position: relative;
+    cursor: pointer;
+}
+
+.main-label span::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: 0px;
+    left: 0;
+    background-color: currentColor;
+    transition: width 0.3s ease;
+}
+
+.main-label span:hover::after {
+    width: 100%;
+}
+
+/* We need to ensure the gaps in expanded menu align around the visible main-label. */
+/* If main-label is visible, and expanded-menu overlays it with hidden text... */
+/* The hidden text in expanded-menu takes up space. */
+/* If we aligned expanded-menu perfectly, the hidden text sits exactly on top of main-label. */
+/* So the visible "Left Items" and "Right Items" will appear to float around the main-label. */
+/* This is exactly what we want. */
+
+/* Adjustments for Play options (Right side of screen) */
+.play-options .option-item {
+    justify-content: flex-start; /* Default align left */
+}
+
+/* Reset basic styles from previous implementation */
+.submenu, .submenu-left, .submenu-right, .submenu-content {
+    display: none !important;
+}
+
+/* We need to align the duplicate title in expanded-menu to the original title position. */
+
+/* Let's use specific offsets for "Type" menu since content is known */
+/* Play (Right side): Text aligns Left.
+   Expanded menu origin (left:0) is at the start of text.
+   We need [Title] to start at 0.
+   So [Left Items] need to be at negative margin.
+*/
+
+#play-type .expanded-menu {
+    left: 0;
+    transform: none;
+    /* We need to shift LEFT by the width of Left Items + Gap. */
+    /* "交互 编排 图形" + gaps. Approx 150px? */
+    margin-left: -150px; /* Adjust manually to align "按方法" with original */
+}
+
+/* Play Year Menu Positioning */
+#play-year .expanded-menu {
+    left: 0;
+    transform: none;
+    margin-left: -10px;
+}
+
+/* Pay Options (Left side of screen) */
+/* Right align everything */
+.pay-options .option-item {
+    justify-content: flex-end;
+}
+
+/* Pay Type Menu Positioning */
+/* Structure: [ZH] [Title] [EN] 
+   Align: Right.
+   Origin: Right edge of Title.
+   We want Title to overlap.
+   Content to right of Title is [EN].
+   So shift Right by width of [EN].
+*/
+#pay-type .expanded-menu {
+    right: 0;
+    left: auto;
+    transform: none;
+    margin-right: -215px; /* Shift right to offset EN items */
+}
+
+/* Pay Year Menu Positioning */
+/* Structure: [Title] [Years]
+   Align: Right.
+   Origin: Right edge of Title.
+   Content to right of Title is [Years].
+   So shift Right by width of [Years].
+*/
+#pay-year .expanded-menu {
+    right: 0;
+    left: auto;
+    transform: none;
+    margin-right: -210px; /* Shift right to offset Years */
+}
+
+/* Hide original label */
+/* .option-item:hover > .main-label {
+    visibility: hidden; 
+} REMOVED */
+
+/* Left Focus Mode - Header Changes */
+/* "在玩" stays, options appear */
+body.left-focus .play-options {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+/* Right Focus Mode - Header Changes */
+body.right-focus .pay-options {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+/* Ensure "在玩" stays put relative to viewport */
+body.left-focus .left header {
+    width: 50%; /* Keep original width constraint to not move H1 */
+    /* But wait, we expanded the left split to flex:1 (full width) */
+    /* We need to pin H1 to its original visual position */
+    /* Since .split.left becomes full width, 'width: 50%' on header makes it stay on left half */
+}
+
+/* Fix "lay" moving to right edge logic */
+/* In focus mode, we want everything ELSE to move right, but H1 stays */
+/* So 'lay' (h2) needs to move to the far right of the screen */
+
+body.left-focus .left h2 {
+    position: fixed; /* Fix it to viewport to move it freely */
+    right: 13px; /* Adjust based on new layout */
+    top: 50px; /* Adjust top */
+    transform: rotate(0deg);
+}
+
+/* Use a pseudo-element to cover the 'l' in 'lay' when focused */
+body.left-focus .left h2::before {
+    content: '';
+    position: absolute;
+    left: -9px; /* Adjust to cover 'l' */
+    top: 0;
+    width: 0.6em; /* Approximate width of 'l' */
+    height: 100%;
+    background-color: var(--bg-color);
+    z-index: 2; /* Keep it above the text */
+}
+
+/* Ensure h2 itself is below the center line if line has z-index 15 */
+/* But header has z-index 20. So h2 is above line. */
+/* The issue is the white box covering the line. */
+/* We can try to make the white box strictly clip to the text area or lower its z-index relative to line */
+/* The line has z-index 15. The header has z-index 20. */
+/* So the white box (child of header) is z-index 20+2 = 22. */
+/* We need the line to be ABOVE the white box? */
+/* Or we can just shift the h2 slightly so the white box doesn't overlap the line? */
+/* Or make the white box transparent but effectively hiding the letter? */
+/* Actually, simply ensuring the white box doesn't extend beyond the text's bounding box might help, but it's covering 'l'. */
+/* If the line is at right: 120px, and text moves there. */
+/* Let's try to increase z-index of center-panel to be above header in focus mode? */
+
+body.left-focus .center-panel {
+    z-index: 35; /* Above header (20) */
+}
+
+/* Also windmill */
+body.left-focus .windmill-container {
+    z-index: 36;
+}
+
+/* Left header wrapper needs to NOT expand to full width if we want H1 to stay */
+/* Actually, if .split.left expands, and header is fixed top/left with width 50%, it stays in place */
+/* But we need to ensure play-options don't get cut off */
+body.left-focus .left header {
+    overflow: visible;
+}
+
+/* Right header moves to right? */
+body.left-focus .right header {
+    width: 0; /* Shrink container */
+    /* "ay" is positioned absolute, so we need to handle it */
+}
+
+/* "ay" moves and rotates 180deg (upside down) */
+body.left-focus .right h2 {
+    transform: rotate(180deg); /* Upside down */
+    left: auto;
+    right: 17px; /* Position it next to "lay"? */
+    top: 29px; /* Adjust top */
+    transition: all 0.5s ease;
+}
+
+/* Right Focus Mode Styles */
+body.right-focus .split.left {
+    flex: 0;
+    padding: 0;
+    /* opacity: 0;  REMOVED to keep header visible if needed */
+    overflow: visible; 
+    min-width: 0;
+    transition: all 0.5s ease;
+}
+
+body.right-focus .split.left .grid-content {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+body.right-focus .split.left h1 {
+    opacity: 0; /* Hide "在玩" */
+    transition: opacity 0.5s;
+}
+
+body.right-focus .split.right {
+    flex: 1;
+    /* Line is moved to left: 100px
+       So we need padding-left to be 100px + gap (40px) = 140px
+    */
+    padding-left: 80px;
+    transition: all 0.5s ease;
+}
+
+/* Fix "在忙" position in right focus */
+/* Similar to how we fixed "在玩" in left focus */
+body.right-focus .right header {
+    width: 50%; /* Keep original width constraint */
+    overflow: visible;
+}
+
+body.right-focus .right h1 {
+    opacity: 1; 
+    /* It's already relatively positioned, so if container stays 50% width on the right, it stays put visually relative to viewport right edge */
+    /* .split.right expands to full width. 
+       Header is fixed right:0, width: 50%.
+       So header covers right half of screen. H1 is inside.
+       H1 stays put. Correct.
+    */
+}
+
+/* Move center panel to the left edge in focus mode */
+body.right-focus .center-panel {
+    left: 40px; /* Reduced from 120px to move closer to left edge */
+    transform: translateX(0); /* Remove center centering */
+    margin-left: -2px; 
+    top: 0;
+}
+
+/* Move windmill to the left edge in focus mode */
+body.right-focus .windmill-container {
+    left: 40px; /* Match center panel position */
+    transform: translateX(-50%) rotate(-90deg); /* Rotate -90deg (counter-clockwise) */
+    top: 25px;
+    margin-left: -1px;
+}
+
+/* Ensure headers stay fixed */
+/* Handled by general header rule */
+
+/* Right header expands logic removed/modified above */
+
+/* Left header shrinks */
+body.right-focus .left header {
+    width: 0;
+}
+
+/* "lay" moves to left and rotates */
+/* In right-focus, "lay" (from left) should move to far left */
+body.right-focus .left h2 {
+    position: fixed;
+    left: -21px; /* Position next to "ay" */
+    right: auto;
+    top: 29px;
+    transform: rotate(180deg); /* Rotate 180deg */
+    transition: all 0.5s ease;
+}
+
+/* "lay" becomes "ay" -> Hide 'l' */
+/* We need a pseudo element on .left h2 in right-focus too */
+body.right-focus .left h2::before {
+    content: '';
+    position: absolute;
+    /* When rotated 180deg:
+       'lay' visual order: y a l
+       'l' is on the right side visually.
+       In DOM flow (LTR), 'l' is first char.
+       Pseudo element is absolute.
+       If we cover 'l', we need to cover the left side of unrotated box, which becomes right side of rotated box.
+    */
+    left: -8px; /* Cover 'l' relative to unrotated text box */
+    top: 0;
+    width: 0.6em; 
+    height: 100%;
+    background-color: var(--bg-color);
+    z-index: 2;
+}
+
+/* "ay" moves to left and rotates */
+/* "ay" (from right) stays on left side of right panel */
+body.right-focus .right h2 {
+    position: fixed;
+    left: 41px; /* Original left position ish */
+    top: 51px; /* Moved down */
+    transform: rotate(0deg); /* Become horizontal */
+    transition: all 0.5s ease;
+}
+
+/* Z-index adjustments for right focus */
+body.right-focus .center-panel {
+    z-index: 35;
+}
+
+body.right-focus .windmill-container {
+    z-index: 36;
+}
+
+/* Windmill Styles */
+h1 {
+    font-family: 'FangZheng', serif; /* Chinese title uses FangZheng */
+    font-size: 1.5rem; /* Increased font size from 1.2rem */
+    margin-bottom: 2rem;
+    cursor: pointer;
+    position: relative; /* Ensure z-index works */
+    z-index: 30; /* Higher than headers container */
+    display: inline-block; /* Required for ::after width to match text */
+    pointer-events: auto; /* Ensure clickable */
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px; /* Thinner underline */
+    bottom: -1px; /* Closer to text */
+    left: 0;
+    background-color: currentColor;
+    /* Removed transition for no animation */
+    display: none; /* Hide initially */
+}
+
+h1:hover::after {
+    display: block; /* Show on hover */
+    width: 100%;
+}
+
+h1:hover {
+    text-decoration: none; /* Remove standard underline */
+}
+
+h2 {
+    font-family: 'Inter', sans-serif; /* English subtitle uses Inter */
+    font-size: 1.5rem; /* Increased font size from 1.2rem */
+    font-weight: 300 !important; /* Force light weight */
+    letter-spacing: normal; /* Reset letter spacing */
+    margin-bottom: 2rem;
+    color: #aaa; /* Light gray filled */
+    display: inline-block;
+}
+
+/* Independent positioning for English subtitles */
+.left h2 {
+    position: absolute;
+    right: 16px;
+    top: -5px; /* Moved up from 5px */
+    transform: rotate(-90deg);
+    transform-origin: right center; 
+    margin: 0;
+    z-index: 10;
+}
+
+.right h2 {
+    position: absolute;
+    left: 15px;
+    top: 55px; /* Moved down from 5px */
+    transform: rotate(90deg);
+    transform-origin: left center;
+    margin: 0;
+    z-index: 10;
+}
+
+
+/* Center Logo Styles Removed */
+
+/* Windmill Styles */
+.windmill-container {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 25px; /* Moved up from 55px */
+    z-index: 20;
+    pointer-events: auto; /* Enable pointer events for click */
+    width: 60px; /* Give it a size to capture hover/click */
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer; /* Show pointer cursor */
+    transition: all 0.5s ease; /* Animate position */
+}
+
+.day-to-day {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem; /* Match h2 font size */
+    color: #aaa; /* Gray for normal letters */
+    font-weight: 550; /* Increased from 500 to 600 */
+    opacity: 1; /* Container is always visible, chars handle visibility */
+    pointer-events: none; /* Default none */
+    position: absolute;
+    top: 65%;
+    left: 62%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    z-index: 10;
+    letter-spacing: -0.9px; /* Reduce letter spacing */
+}
+
+.day-to-day .black {
+    color: #000;
+    font-weight: 550; /* Increased from 400 to 700 to match */
+    opacity: 0; /* Hidden initially */
+}
+
+.day-to-day .gray-char {
+    display: inline-block;
+    opacity: 0;
+    transform-origin: center;
+    transform: rotate(-180deg) scale(0.5);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy effect */
+}
+
+/* Visibility Toggles based on panel state */
+/* Removed simple opacity fade for blade */
+
+body.panel-open h2 {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Match transition duration */
+}
+
+body.panel-open .day-to-day {
+    pointer-events: auto;
+}
+
+body.panel-open .day-to-day .black {
+    opacity: 1;
+    transition: opacity 0s 0.8s; /* Instant appear delay */
+}
+
+body.panel-open .day-to-day .gray-char {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+    transition-delay: 0.8s; /* Start animation when black letters appear */
+}
+
+/* Stagger effect for gray chars if needed, or all at once? 
+   "旋转出现" usually implies a nice pop in. Let's stagger them slightly for effect */
+body.panel-open .day-to-day .gray-char:nth-child(2) { transition-delay: 0.8s; } /* a */
+body.panel-open .day-to-day .gray-char:nth-child(3) { transition-delay: 0.85s; } /* y */
+body.panel-open .day-to-day .gray-char:nth-child(4) { transition-delay: 0.9s; } /* . */
+body.panel-open .day-to-day .gray-char:nth-child(6) { transition-delay: 0.95s; } /* o */
+body.panel-open .day-to-day .gray-char:nth-child(7) { transition-delay: 1.0s; } /* . */
+body.panel-open .day-to-day .gray-char:nth-child(9) { transition-delay: 1.05s; } /* a */
+body.panel-open .day-to-day .gray-char:nth-child(10) { transition-delay: 1.1s; } /* y */
+
+/* Windmill Wrapper (Rotates) */
+.windmill-wrapper {
+    width: 40px;
+    height: 40px; /* Assume square aspect ratio for rotation center */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* transform set by JS: translate(-50%, -50%) rotate(...) */
+    /* No transition on transform here because JS drives it */
+    pointer-events: none; /* Let clicks pass to container if needed, but container has click listener */
+}
+
+/* Blade Parts */
+.blade-part {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    overflow: hidden;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); /* Smooth splitting animation for closing */
+}
+
+.blade-part.left {
+    left: 0;
+    transform-origin: center right; /* Rotate around split point */
+}
+
+.blade-part.right {
+    right: 0;
+    transform-origin: center left;
+}
+
+.blade-part img {
+    width: 40px; /* Original width */
+    height: auto;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.blade-part.left img {
+    left: 0;
+}
+
+.blade-part.right img {
+    left: -20px; /* Shift left by half width to show right side */
+}
+
+/* Split Animation Keyframes */
+@keyframes bladeSplitLeft {
+    0% {
+        transform: translateX(0) rotate(0deg);
+        opacity: 1;
+    }
+    30% {
+        transform: translateX(-25px) rotate(0deg); /* Move out first - reduced distance */
+        opacity: 1;
+    }
+    80% {
+        transform: translateX(-40px) rotate(-450deg); /* Rotate 450 degrees - reduced distance */
+        opacity: 1; /* Still visible while rotating */
+    }
+    100% {
+        transform: translateX(-40px) rotate(-450deg);
+        opacity: 0; /* Fade out at the end */
+    }
+}
+
+@keyframes bladeSplitRight {
+    0% {
+        transform: translateX(0) rotate(0deg);
+        opacity: 1;
+    }
+    30% {
+        transform: translateX(40px) rotate(0deg);
+        opacity: 1;
+    }
+    80% {
+        transform: translateX(41px) rotate(450deg); /* Rotate 450 degrees - reduced distance */
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(45px) rotate(450deg);
+        opacity: 0;
+    }
+}
+
+/* Split Animation */
+body.panel-open .blade-part.left {
+    animation: bladeSplitLeft 1.2s forwards cubic-bezier(0.25, 1, 0.5, 1); /* Longer duration for rotation */
+}
+
+body.panel-open .blade-part.right {
+    animation: bladeSplitRight 1.2s forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Old .windmill-blade class removal/update */
+.windmill-blade {
+    display: none;
+}
+
+/* Grid Layout */
+.grid-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--grid-gap);
+    width: 100%;
+}
+
+.grid-item {
+    aspect-ratio: 1;
+    background-color: #f0f0f0;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    transition: transform 0.2s ease;
+}
+
+/* Dark style for left grid items */
+.split.left .grid-item {
+    background-color: #2a2a2a;
+    border-color: #333;
+}
+
+/* Gray style for right grid items */
+.split.right .grid-item {
+    background-color: #e0e0e0; /* Gray */
+    border-color: #ccc;
+}
+
+.grid-item:hover {
+    transform: translateY(-2px);
+    border-color: #000;
+}
+
+.split.left .grid-item:hover {
+    border-color: #666;
+}
+
+.split.right .grid-item:hover {
+    border-color: #999;
+}
+
+/* Specific styling for left/right if needed */
+.left {
+    align-items: flex-end; /* Align content towards the center line? Or just standard? */
+    /* Let's keep it standard top-left alignment for now, maybe align text to right for the left side? */
+}
+
+.right {
+    align-items: flex-start;
+}
+
+/* Let's center the headers visually or align them to the center line */
+.left header {
+    text-align: right;
+    width: 50%; /* Take up half width */
+    position: fixed; /* Fixed position */
+    top: 0; /* Adjusted independently if needed */
+    left: 0;
+    padding-right: 40px; /* Match container padding */
+    z-index: 20;
+    pointer-events: none; /* Let clicks pass through if needed, but H1 might need selection */
+}
+
+.right header {
+    text-align: left;
+    width: 50%; /* Take up half width */
+    position: fixed; /* Fixed position */
+    top: 0; /* Adjusted independently if needed */
+    right: 0;
+    padding-left: 40px; /* Match container padding */
+    z-index: 20;
+    pointer-events: none;
+}
+
+/* Independent positioning for Chinese titles */
+.left h1, .right h1 {
+    position: relative;
+    top: 0; /* Default position */
+}
+
+/* Disable interaction on active title in focus mode */
+body.left-focus .left h1,
+body.right-focus .right h1 {
+    pointer-events: none !important; /* Override inline style */
+    cursor: default;
+}
+
+body.left-focus .left h1::after,
+body.right-focus .right h1::after {
+    display: none !important;
+}
+
+/* Ensure h1 and h2 receive pointer events if needed */
+header h1, header h2 {
+    pointer-events: auto;
+}
+
+/* Ensure header container allows clicks to pass through except for children */
+.left header, .right header {
+    pointer-events: none;
+}
+
+/* Responsive */
+/* Removed flex-direction: column change to keep split layout */
+@media (max-width: 768px) {
+    /* Keep row direction */
+    .container {
+        flex-direction: row; 
+    }
+    
+    .center-line {
+        /* Adjust for smaller screens if needed, but keep vertical */
+    }
+    
+    /* Adjust grid columns for smaller space */
+    .grid-content {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Smaller min-width */
+        gap: 10px; /* Smaller gap */
+    }
+    
+    .split {
+        height: 100%; /* Full height */
+        padding: 20px; /* Reduced padding */
+        padding-top: 150px; /* Keep top padding to avoid overlap */
+    }
+    
+    /* Keep headers aligned */
+    .left header, .right header {
+        text-align: inherit; /* Reset or keep original */
+        width: 50%; /* Keep 50% width */
+    }
+    
+    /* DO NOT scale windmill or text */
+    /* Removed transform scale and font-size reduction */
+}
