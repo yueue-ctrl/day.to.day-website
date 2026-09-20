@@ -1,0 +1,37 @@
+{
+  "published": false,
+  "section": "pay",
+  "order": 10,
+  "slug": "project-slug",
+  "title": "项目名称",
+  "subtitle": "Project subtitle",
+  "year": "2026",
+  "approaches": ["graphic"],
+  "cover": {
+    "src": "",
+    "alt": "",
+    "fit": "contain",
+    "background": "#f2f2f2"
+  },
+  "intro": {
+    "zh": "在这里填写项目中文简介。",
+    "en": "Add the English project introduction here."
+  },
+  "details": {
+    "client": "",
+    "role": "",
+    "team": ""
+  },
+  "images": [
+    {
+      "src": "images/01.jpg",
+      "alt": "",
+      "fit": "contain",
+      "background": "#ffffff",
+      "caption": {
+        "zh": "图片注释",
+        "en": "Image caption"
+      }
+    }
+  ]
+}

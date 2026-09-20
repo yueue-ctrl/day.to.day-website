@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project — day.To.day</title>
+    <link rel="stylesheet" href="project.css">
+</head>
+<body>
+    <header class="project-header">
+        <a href="index.html" class="project-back">day.To.day</a>
+        <div class="project-heading">
+            <h1 id="project-title"></h1>
+            <p id="project-subtitle"></p>
+        </div>
+        <p id="project-year"></p>
+    </header>
+
+    <main id="project-content" class="project-content" hidden>
+        <section class="project-intro">
+            <p id="project-intro-zh"></p>
+            <p id="project-intro-en"></p>
+            <dl id="project-details"></dl>
+        </section>
+        <section id="project-gallery" class="project-gallery" aria-label="Project images"></section>
+    </main>
+
+    <p id="project-error" class="project-error" hidden>这个项目暂时无法显示。</p>
+    <script src="js/project-detail.js"></script>
+</body>
+</html>

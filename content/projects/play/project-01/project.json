@@ -1,0 +1,26 @@
+{
+  "published": true,
+  "section": "play",
+  "order": 10,
+  "slug": "project-01",
+  "title": "项目名称",
+  "subtitle": "Project subtitle",
+  "year": "2026",
+  "approaches": ["interaction"],
+  "cover": {
+    "src": "",
+    "alt": "",
+    "fit": "contain",
+    "background": "#f2f2f2"
+  },
+  "intro": {
+    "zh": "在这里填写项目中文简介。",
+    "en": "Add the English project introduction here."
+  },
+  "details": {
+    "client": "",
+    "role": "",
+    "team": ""
+  },
+  "images": []
+}
