@@ -1,4 +1,4 @@
-(async function renderProjectGrid() {
+(function renderProjectGrid() {
     const containers = {
         play: document.getElementById('play-projects'),
         pay: document.getElementById('pay-projects')
@@ -20,11 +20,23 @@
         media.style.setProperty('--project-fit', project.cover?.fit || 'contain');
 
         if (project.cover?.src) {
-            const image = document.createElement('img');
-            image.src = resolveAsset(projectPath, project.cover.src);
-            image.alt = project.cover.alt || '';
-            image.loading = 'lazy';
-            media.appendChild(image);
+            if (project.cover.mediaType === 'video' || /\.(mp4|webm|mov)$/i.test(project.cover.src)) {
+                const video = document.createElement('video');
+                video.src = resolveAsset(projectPath, project.cover.src);
+                video.muted = true;
+                video.loop = true;
+                video.autoplay = true;
+                video.playsInline = true;
+                video.preload = 'metadata';
+                video.setAttribute('aria-label', project.cover.alt || '');
+                media.appendChild(video);
+            } else {
+                const image = document.createElement('img');
+                image.src = resolveAsset(projectPath, project.cover.src);
+                image.alt = project.cover.alt || '';
+                image.loading = 'lazy';
+                media.appendChild(image);
+            }
         } else {
             media.classList.add('project-card__media--empty');
             media.setAttribute('aria-label', 'Preview image to be added');
@@ -46,24 +58,11 @@
         return card;
     };
 
-    try {
-        const manifestResponse = await fetch('content/projects/manifest.json');
-        if (!manifestResponse.ok) throw new Error('Project manifest could not be loaded.');
-        const manifest = await manifestResponse.json();
-
-        const records = await Promise.all((manifest.projects || []).map(async (projectPath) => {
-            const response = await fetch(projectPath);
-            if (!response.ok) throw new Error(`Project could not be loaded: ${projectPath}`);
-            return { project: await response.json(), projectPath };
-        }));
-
-        records
-            .filter(({ project }) => project.published !== false && containers[project.section])
-            .sort((a, b) => (a.project.order ?? 999) - (b.project.order ?? 999))
-            .forEach(({ project, projectPath }) => {
-                containers[project.section].appendChild(createCard(project, projectPath));
-            });
-    } catch (error) {
-        console.error(error);
-    }
+    const records = Array.isArray(window.DTD_PROJECTS) ? window.DTD_PROJECTS : [];
+    records
+        .filter(({ project }) => project.published !== false && containers[project.section])
+        .sort((a, b) => (a.project.order ?? 999) - (b.project.order ?? 999))
+        .forEach(({ project, projectPath }) => {
+            containers[project.section].appendChild(createCard(project, projectPath));
+        });
 })();

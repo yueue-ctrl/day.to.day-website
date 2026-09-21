@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内容面板 — day.To.day</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <p class="eyebrow">day.To.day</p>
+            <h1>项目内容面板</h1>
+        </div>
+        <div class="topbar__actions">
+            <a href="index.html" target="_blank" rel="noopener">打开网站 ↗</a>
+            <button type="button" class="button button--quiet" id="new-project">新建项目</button>
+        </div>
+    </header>
+
+    <main class="workspace">
+        <form id="project-form" class="editor">
+            <section class="panel panel--picker">
+                <label class="field field--full">
+                    <span class="field__position">已有内容</span>
+                    <span class="field__label">选择要编辑的项目</span>
+                    <select id="project-picker">
+                        <option value="">＋ 新建项目</option>
+                    </select>
+                </label>
+            </section>
+
+            <section class="panel">
+                <div class="section-heading">
+                    <span>01</span>
+                    <div>
+                        <h2>项目位置</h2>
+                        <p>决定项目放在 Play 还是 Pay，以及文件夹名称。</p>
+                    </div>
+                </div>
+                <div class="field-grid">
+                    <label class="field">
+                        <span class="field__position">首页 · 分类</span>
+                        <span class="field__label">Play / Pay</span>
+                        <select id="section" required>
+                            <option value="play">Play — 自主探索</option>
+                            <option value="pay">Pay — 委托项目</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span class="field__position">文件 · 地址</span>
+                        <span class="field__label">英文短名</span>
+                        <input id="slug" type="text" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" placeholder="my-project" required>
+                        <small>只用小写英文、数字和短横线。</small>
+                    </label>
+                    <label class="field">
+                        <span class="field__position">首页 · 排列</span>
+                        <span class="field__label">顺序</span>
+                        <input id="order" type="number" value="10" step="1">
+                        <small>数字越小越靠前。</small>
+                    </label>
+                    <label class="field">
+                        <span class="field__position">筛选 · 年份</span>
+                        <span class="field__label">年份</span>
+                        <input id="year" type="text" inputmode="numeric" placeholder="2026">
+                    </label>
+                </div>
+                <fieldset class="field field--full checkbox-group">
+                    <legend>
+                        <span class="field__position">筛选 · 方法</span>
+                        <span class="field__label">Approach</span>
+                    </legend>
+                    <label><input type="checkbox" name="approach" value="interaction"> Interaction / 交互</label>
+                    <label><input type="checkbox" name="approach" value="book"> Book / 编排</label>
+                    <label><input type="checkbox" name="approach" value="graphic"> Graphic / 图形</label>
+                </fieldset>
+            </section>
+
+            <section class="panel">
+                <div class="section-heading">
+                    <span>02</span>
+                    <div>
+                        <h2>首页卡片</h2>
+                        <p>右侧会实时显示正方形预览图和名称位置。</p>
+                    </div>
+                </div>
+                <div class="field-grid">
+                    <label class="field">
+                        <span class="field__position">首页 · 左下</span>
+                        <span class="field__label">项目名称</span>
+                        <input id="title" type="text" placeholder="项目名称" required>
+                    </label>
+                    <label class="field">
+                        <span class="field__position">首页 · 右下</span>
+                        <span class="field__label">副标题</span>
+                        <input id="subtitle" type="text" placeholder="Project subtitle">
+                    </label>
+                    <label class="field field--full">
+                        <span class="field__position">详情页 · 项目名下方</span>
+                        <span class="field__label">Tag</span>
+                        <input id="tag" type="text" placeholder="Graphic / Exhibition">
+                    </label>
+                    <label class="field field--full upload-field">
+                        <span class="field__position">首页 · 正方形区域</span>
+                        <span class="field__label">预览图片或视频</span>
+                        <input id="cover-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime">
+                        <span id="cover-current" class="current-file">尚未选择图片或视频；正方形位置仍会保留。</span>
+                    </label>
+                    <label class="field">
+                        <span class="field__position">首页 · 图片方式</span>
+                        <span class="field__label">显示方式</span>
+                        <select id="cover-fit">
+                            <option value="contain">完整显示，不裁切</option>
+                            <option value="cover">铺满正方形，允许裁切</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span class="field__position">首页 · 图片留白</span>
+                        <span class="field__label">背景颜色</span>
+                        <input id="cover-background" type="color" value="#f2f2f2">
+                    </label>
+                    <label class="field field--full">
+                        <span class="field__position">辅助说明 · 不直接显示</span>
+                        <span class="field__label">预览图内容描述 Alt</span>
+                        <input id="cover-alt" type="text" placeholder="例如：粉色与银色吊牌悬挂在黑色背景前">
+                    </label>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="section-heading">
+                    <span>03</span>
+                    <div>
+                        <h2>项目简介</h2>
+                        <p>显示在项目详情页的开头。</p>
+                    </div>
+                </div>
+                <label class="translation-toggle">
+                    <input id="auto-translate" type="checkbox" checked>
+                    <span>
+                        <strong>自动补全中英文</strong>
+                        <small>填写一栏后自动翻译另一栏。需要联网，文字会发送至 MyMemory 翻译服务。</small>
+                    </span>
+                    <em id="translation-status" aria-live="polite"></em>
+                </label>
+                <div class="field-grid">
+                    <label class="field">
+                        <span class="field__position">详情页 · 简介左栏</span>
+                        <span class="field__label">中文简介</span>
+                        <textarea id="intro-zh" rows="7" placeholder="项目背景、方法与结果……"></textarea>
+                    </label>
+                    <label class="field">
+                        <span class="field__position">详情页 · 简介右栏</span>
+                        <span class="field__label">English introduction</span>
+                        <textarea id="intro-en" rows="7" placeholder="Project background, approach and outcome…"></textarea>
+                    </label>
+                    <label class="field">
+                        <span class="field__position">详情页 · 项目信息</span>
+                        <span class="field__label">Client</span>
+                        <input id="client" type="text">
+                    </label>
+                    <label class="field">
+                        <span class="field__position">详情页 · 项目信息</span>
+                        <span class="field__label">Role</span>
+                        <input id="role" type="text">
+                    </label>
+                    <label class="field field--full">
+                        <span class="field__position">详情页 · 项目信息</span>
+                        <span class="field__label">Team / Credits</span>
+                        <input id="team" type="text">
+                    </label>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="section-heading section-heading--action">
+                    <span>04</span>
+                    <div>
+                        <h2>详情图片、视频与注释</h2>
+                        <p>图片、GIF 和视频按照这里的顺序从上到下出现。</p>
+                    </div>
+                    <button type="button" class="button button--quiet" id="add-image">＋ 添加媒体</button>
+                </div>
+                <div id="gallery-editor" class="gallery-editor"></div>
+            </section>
+
+            <section class="panel panel--publish">
+                <label class="publish-toggle">
+                    <input id="published" type="checkbox" checked>
+                    <span>
+                        <strong>显示在首页</strong>
+                        <small>取消勾选会保存为草稿。</small>
+                    </span>
+                </label>
+                <button type="submit" class="button button--primary" id="save-project">保存项目</button>
+                <p id="save-status" class="save-status" role="status" aria-live="polite"></p>
+            </section>
+        </form>
+
+        <aside class="preview" aria-label="实时预览">
+            <div class="preview__topline">
+                <div>
+                    <p class="eyebrow">Live preview</p>
+                    <h2>实时预览</h2>
+                </div>
+                <div class="preview-mode" id="preview-section">PLAY</div>
+            </div>
+
+            <section class="preview-block">
+                <p class="preview-label">首页卡片</p>
+                <article class="preview-card">
+                    <div class="preview-card__media" id="preview-cover-media">
+                        <span id="preview-cover-empty">预览图片／视频位置</span>
+                        <img id="preview-cover-image" alt="" hidden>
+                        <video id="preview-cover-video" muted loop autoplay playsinline hidden></video>
+                    </div>
+                    <div class="preview-card__meta">
+                        <span id="preview-title">项目名称</span>
+                        <span id="preview-subtitle">Project subtitle</span>
+                    </div>
+                </article>
+            </section>
+
+            <section class="preview-block preview-detail">
+                <p class="preview-label">项目详情页</p>
+                <header class="preview-detail__header">
+                    <span id="detail-title">项目名称</span>
+                    <span id="detail-subtitle">Project subtitle</span>
+                    <span id="detail-year">2026</span>
+                </header>
+                <div class="preview-detail__intro">
+                    <p id="detail-intro-zh">中文简介会显示在这里。</p>
+                    <p id="detail-intro-en">The English introduction appears here.</p>
+                </div>
+                <div id="gallery-preview" class="gallery-preview"></div>
+            </section>
+        </aside>
+    </main>
+
+    <template id="gallery-item-template">
+        <article class="gallery-item">
+            <div class="gallery-item__heading">
+                <strong class="gallery-item__number"></strong>
+                <button type="button" class="text-button gallery-item__remove">移除</button>
+            </div>
+            <div class="field-grid">
+                <label class="field field--full upload-field">
+                    <span class="field__position">详情页 · 图片或视频</span>
+                    <span class="field__label">选择媒体</span>
+                    <input class="gallery-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime">
+                    <span class="current-file gallery-current">尚未选择图片、GIF 或视频。</span>
+                </label>
+                <label class="field field--full">
+                    <span class="field__position">辅助说明 · 不直接显示</span>
+                    <span class="field__label">媒体内容描述 Alt</span>
+                    <input class="gallery-alt" type="text">
+                </label>
+                <label class="field field--full">
+                    <span class="field__position">详情页 · 媒体下方</span>
+                    <span class="field__label">图片／视频注释</span>
+                    <textarea class="gallery-caption" rows="3"></textarea>
+                </label>
+                <label class="field">
+                    <span class="field__position">详情页 · 图片方式</span>
+                    <span class="field__label">显示方式</span>
+                    <select class="gallery-fit">
+                        <option value="contain">完整显示，不裁切</option>
+                        <option value="cover">铺满区域，允许裁切</option>
+                    </select>
+                </label>
+                <label class="field">
+                    <span class="field__position">详情页 · 图片留白</span>
+                    <span class="field__label">背景颜色</span>
+                    <input class="gallery-background" type="color" value="#ffffff">
+                </label>
+            </div>
+        </article>
+    </template>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

@@ -17,3 +17,7 @@ Works on the website can also be browsed through two classification systems. One
 ## Adding projects
 
 Project content is organized under `content/projects/`. Read `content/projects/README.md` before adding a project. Copy the `_template` folder inside either `play` or `pay`, add the project to `manifest.json`, then fill in its images and `project.json` fields.
+
+### Local content panel
+
+On macOS, double-click `打开内容面板.command`. The panel opens at `http://127.0.0.1:4173/admin.html` and saves text and images directly into the project folders. Keep the Terminal window open while using the panel; close it or press Control + C when finished.

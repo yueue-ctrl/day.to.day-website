@@ -197,7 +197,7 @@ body.left-focus .split.left {
        Original padding is 40px.
        We need padding-right to be 120px + some gap (e.g. 40px) = 160px
     */
-    padding-right: 80px; 
+    padding-right: 100px;
     transition: all 0.5s ease;
 }
 
@@ -739,7 +739,7 @@ body.right-focus .split.right {
     /* Line is moved to left: 100px
        So we need padding-left to be 100px + gap (40px) = 140px
     */
-    padding-left: 80px;
+    padding-left: 100px;
     transition: all 0.5s ease;
 }
 
@@ -1087,39 +1087,40 @@ body.panel-open .blade-part.right {
 /* Grid Layout */
 .grid-content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: 1fr;
     gap: var(--grid-gap);
     width: 100%;
     align-content: start;
+    align-items: start;
+}
+
+body.left-focus .split.left .grid-content,
+body.right-focus .split.right .grid-content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .project-card {
     display: block;
     min-width: 0;
+    align-self: start;
     color: inherit;
     text-decoration: none;
 }
 
 .project-card__media {
     width: 100%;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
-    background: var(--project-bg, #f2f2f2);
 }
 
-.project-card__media img {
+.project-card__media img,
+.project-card__media video {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: block;
-    object-fit: var(--project-fit, contain);
-    object-position: center;
 }
 
 .project-card__media--empty {
-    border: 1px solid #d8d8d8;
+    display: none;
 }
 
 .project-card__meta {
@@ -1231,6 +1232,11 @@ header h1, header h2 {
     .grid-content {
         grid-template-columns: 1fr;
         gap: 10px; /* Smaller gap */
+    }
+
+    body.left-focus .split.left .grid-content,
+    body.right-focus .split.right .grid-content {
+        grid-template-columns: 1fr;
     }
 
     .project-card__meta {

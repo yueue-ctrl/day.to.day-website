@@ -1,4 +1,4 @@
-(async function renderProjectDetail() {
+(function renderProjectDetail() {
     const params = new URLSearchParams(window.location.search);
     const projectPath = params.get('project');
     const content = document.getElementById('project-content');
@@ -18,21 +18,57 @@
         list.append(term, description);
     };
 
+    const createMedia = (item, options = {}) => {
+        const isVideo = item.mediaType === 'video' || /\.(mp4|webm|mov)$/i.test(item.src || '');
+        if (isVideo) {
+            const video = document.createElement('video');
+            video.src = resolveAsset(item.src);
+            video.muted = true;
+            video.loop = true;
+            video.autoplay = true;
+            video.playsInline = true;
+            video.controls = options.controls === true;
+            video.preload = 'metadata';
+            video.setAttribute('aria-label', item.alt || '');
+            return video;
+        }
+
+        const image = document.createElement('img');
+        image.src = resolveAsset(item.src);
+        image.alt = item.alt || '';
+        image.loading = options.eager ? 'eager' : 'lazy';
+        return image;
+    };
+
     try {
         if (!projectPath || !projectPath.startsWith('content/projects/')) {
             throw new Error('Invalid project path.');
         }
 
-        const response = await fetch(projectPath);
-        if (!response.ok) throw new Error('Project could not be loaded.');
-        const project = await response.json();
+        const record = (window.DTD_PROJECTS || []).find((item) => item.projectPath === projectPath);
+        if (!record) throw new Error('Project could not be loaded.');
+        const project = record.project;
+        const approachLabels = {
+            interaction: 'Interaction',
+            book: 'Book',
+            graphic: 'Graphic'
+        };
 
         document.title = `${project.title || 'Project'} — day.To.day`;
+        document.body.dataset.section = project.section === 'play' ? 'play' : 'pay';
         document.getElementById('project-title').textContent = project.title || '';
-        document.getElementById('project-subtitle').textContent = project.subtitle || '';
+        document.getElementById('project-subtitle').textContent = project.tag
+            || project.subtitle
+            || (project.approaches || []).map((item) => approachLabels[item] || item).join(' / ');
         document.getElementById('project-year').textContent = project.year || '';
         document.getElementById('project-intro-zh').textContent = project.intro?.zh || '';
         document.getElementById('project-intro-en').textContent = project.intro?.en || '';
+
+        if (project.cover?.src) {
+            const hero = document.getElementById('project-hero');
+            hero.appendChild(createMedia(project.cover, { eager: true }));
+            hero.hidden = false;
+        }
 
         const details = document.getElementById('project-details');
         addDetail(details, 'Client', project.details?.client);
@@ -47,23 +83,16 @@
 
             const media = document.createElement('div');
             media.className = 'project-figure__media';
-            media.style.setProperty('--image-bg', item.background || '#fff');
-            media.style.setProperty('--image-fit', item.fit || 'contain');
 
-            const image = document.createElement('img');
-            image.src = resolveAsset(item.src);
-            image.alt = item.alt || '';
-            image.loading = 'lazy';
-            media.appendChild(image);
+            media.appendChild(createMedia(item, { controls: true }));
 
             const caption = document.createElement('figcaption');
-            const zh = document.createElement('span');
-            zh.textContent = item.caption?.zh || '';
-            const en = document.createElement('span');
-            en.textContent = item.caption?.en || '';
-            caption.append(zh, en);
+            caption.textContent = typeof item.caption === 'string'
+                ? item.caption
+                : item.caption?.zh || item.caption?.en || '';
 
-            figure.append(media, caption);
+            figure.appendChild(media);
+            if (caption.textContent) figure.appendChild(caption);
             gallery.appendChild(figure);
         });
 

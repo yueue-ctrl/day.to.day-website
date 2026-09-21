@@ -1,0 +1,7 @@
+{
+  "name": "day-to-day-website",
+  "private": true,
+  "scripts": {
+    "content": "node tools/content-server.js"
+  }
+}

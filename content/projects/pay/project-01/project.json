@@ -1,26 +1,31 @@
 {
   "published": true,
   "section": "pay",
-  "order": 10,
+  "order": 1,
   "slug": "project-01",
-  "title": "项目名称",
-  "subtitle": "Project subtitle",
+  "title": "New Sp-Art",
+  "subtitle": "",
+  "tag": "Graphic / Exhibition",
   "year": "2026",
-  "approaches": ["graphic"],
+  "approaches": [
+    "interaction",
+    "graphic"
+  ],
   "cover": {
-    "src": "",
+    "src": "cover/cover.mp4",
+    "mediaType": "video",
     "alt": "",
     "fit": "contain",
     "background": "#f2f2f2"
   },
   "intro": {
-    "zh": "在这里填写项目中文简介。",
-    "en": "Add the English project introduction here."
+    "zh": "New Sp-Art Museum 是一个数字展览项目，诞生于中法建交60周年和巴黎奥运会的背景下。项目以艺术、文化与体育之间的关系为灵感，希望策划一场充满运动感的数字互动艺术展览。本项目强调身体作为连接体育与艺术的节点所具有的重要性。\n\n技术：互动平台（UE5 蓝图）、模型设计（Blender）、服务器（FastAPI 与 Stable Diffusion API）、图像生成（基于 OpenPose 的 Stable Diffusion API）、动作捕捉（Google MediaPipe）。",
+    "en": "The New Sp-Art Museum is a digital exhibition project launched in the context of the 60th anniversary of the establishment of diplomatic relations between China and France and the Paris Olympics. Inspired by the relationship between art, culture, and sports, we hope to plan a digital interactive art exhibition full of sports. This project emphasizes the importance of the body as a connecting point between sports and art.\n\nTech: Interactive platform (UE5 Blueprint), Model design (Blender), Server (FastApi & Stablediffusion APl), lmage generation (Stablediffusion APl of openpose), Motion capture (Google Mediapipe)."
   },
   "details": {
-    "client": "",
-    "role": "",
-    "team": ""
+    "client": "Yangbo.cctv, Aliyun Design.",
+    "role": "project leader",
+    "team": "Qucheng Zang, Nan Cui"
   },
   "images": []
 }

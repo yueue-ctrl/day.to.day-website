@@ -7,25 +7,40 @@
     <link rel="stylesheet" href="project.css">
 </head>
 <body>
-    <header class="project-header">
-        <a href="index.html" class="project-back">day.To.day</a>
-        <div class="project-heading">
-            <h1 id="project-title"></h1>
-            <p id="project-subtitle"></p>
-        </div>
-        <p id="project-year"></p>
-    </header>
+    <aside class="project-console" aria-label="返回首页">
+        <div class="project-console__line"></div>
+        <a href="index.html" class="project-console__home" aria-label="返回 day.To.day 首页">
+            <span class="windmill-wrapper">
+                <span class="blade-part left"><img src="pic/风车叶.png" alt=""></span>
+                <span class="blade-part right"><img src="pic/风车叶.png" alt=""></span>
+            </span>
+        </a>
+    </aside>
 
-    <main id="project-content" class="project-content" hidden>
-        <section class="project-intro">
-            <p id="project-intro-zh"></p>
-            <p id="project-intro-en"></p>
-            <dl id="project-details"></dl>
-        </section>
-        <section id="project-gallery" class="project-gallery" aria-label="Project images"></section>
-    </main>
+    <div class="project-page">
+        <header class="project-header">
+            <div class="project-heading">
+                <h1 id="project-title"></h1>
+                <p id="project-subtitle"></p>
+                <p id="project-year"></p>
+            </div>
+        </header>
+
+        <main id="project-content" class="project-content" hidden>
+            <section id="project-hero" class="project-hero" hidden aria-label="Project cover"></section>
+            <section class="project-intro">
+                <div class="project-intro__copy">
+                    <p id="project-intro-zh"></p>
+                    <p id="project-intro-en"></p>
+                </div>
+                <dl id="project-details"></dl>
+            </section>
+            <section id="project-gallery" class="project-gallery" aria-label="Project media"></section>
+        </main>
+    </div>
 
     <p id="project-error" class="project-error" hidden>这个项目暂时无法显示。</p>
+    <script src="content/projects-data.js"></script>
     <script src="js/project-detail.js"></script>
 </body>
 </html>
